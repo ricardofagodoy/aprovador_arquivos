@@ -1,6 +1,10 @@
 class Email {
 
   static sendEmail(recipient, subject, body) {
+
+    if (!recipient)
+      return
+
     MailApp.sendEmail({
       to: recipient,
       subject: subject,

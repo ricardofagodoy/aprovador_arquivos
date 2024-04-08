@@ -63,7 +63,7 @@ function processInputFile(id, configName) {
   Email.sendEmail(
     spreadsheet.getRangeByName(NAMED_RANGES.aprovador).getValue(),
     MESSAGES.newFileSubject.replace('$NAME', file.getName()),
-    MESSAGES.newFileBody)
+    MESSAGES.newFileBody.replace('$LINK', spreadsheet.getUrl()))
 }
 
 function checkDriveFiles() {

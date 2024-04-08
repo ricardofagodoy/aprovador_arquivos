@@ -16,7 +16,7 @@ const NAMED_RANGES = {
 
 const MESSAGES = {
   newFileSubject: '[Aprovador] Novo arquivo para aprovação: $NAME',
-  newFileBody: 'Você tem um novo arquivo para aprovar, acesse o Aprovador de Arquivos para visualizar.',
+  newFileBody: 'Você tem um novo arquivo para aprovar, acesse $LINK para visualizar.',
 
   approvedSubject: '[Aprovador] Arquivo aprovado disponível: $NAME',
   approvedBody: 'Seu arquivo foi aprovado, acesse em $LINK',
