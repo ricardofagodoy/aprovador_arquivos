@@ -19,10 +19,10 @@ const MESSAGES = {
   newFileBody: 'Você tem um novo arquivo para aprovar, acesse $LINK para visualizar.',
 
   approvedSubject: '[Aprovador] Arquivo aprovado disponível: $NAME',
-  approvedBody: 'Seu arquivo foi aprovado, acesse em $LINK',
+  approvedBody: 'Um arquivo foi aprovado por $APPROVER, acesse em $LINK',
 
   rejectedSubject: '[Aprovador] Arquivo rejeitado: $NAME',
-  rejectedBody: 'Seu arquivo foi rejeitado por "$MESSAGE", acesse em $LINK'
+  rejectedBody: 'Seu arquivo foi rejeitado por $APPROVER pelo motivo "$MESSAGE", acesse em $LINK'
 }
 
 const FILE_DATA = {

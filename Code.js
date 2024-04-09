@@ -9,15 +9,16 @@ function processApprovalChange(e) {
   const sheet = SpreadsheetApp.getActiveSheet()
 
   // If it's a change on "Status" only  
-  if (e.range.columnStart == FILE_DATA.fields.status+1 && 
-      e.range.columnEnd == FILE_DATA.fields.status+1 && 
-      sheet.getName() == MAIN_SHEET) {
+  if (e.range.columnStart == FILE_DATA.fields.status + 1 &&
+    e.range.columnEnd == FILE_DATA.fields.status + 1 &&
+    sheet.getName() == MAIN_SHEET) {
 
     // Proccess both scenarios
     const configs = new Configs()
 
     const fileRow = sheet.getRange(FILE_DATA.range.replaceAll('$', e.range.rowStart)).getValues()[0]
     const configRow = configs.findConfig(fileRow[FILE_DATA.fields.config])
+    const approver = e.user.email
 
     Logger.log(`Processing "${e.value}" to ${fileRow[FILE_DATA.fields.fileId]}...`)
 
@@ -25,7 +26,9 @@ function processApprovalChange(e) {
     if (e.value == "Aprovado") {
       const movedFile = Drive.moveFileTo(fileRow[FILE_DATA.fields.fileId], configRow[configs.field('Allow')])
       const subject = MESSAGES.approvedSubject.replace('$NAME', movedFile.getName())
-      const body = MESSAGES.approvedBody.replace('$LINK', movedFile.getUrl())
+      const body = MESSAGES.approvedBody
+        .replace('$LINK', movedFile.getUrl())
+        .replace('$APPROVER', approver)
 
       Email.sendEmail(fileRow[FILE_DATA.fields.owner], subject, body)
       Email.sendEmail(configRow[configs.field('Email')], subject, body)
@@ -35,7 +38,10 @@ function processApprovalChange(e) {
     else if (e.value == "Rejeitado") {
       const movedFile = Drive.moveFileTo(fileRow[FILE_DATA.fields.fileId], configRow[configs.field('Deny')])
       const subject = MESSAGES.rejectedSubject.replace('$NAME', movedFile.getName())
-      const body = MESSAGES.rejectedBody.replace('$LINK', movedFile.getUrl()).replace('$MESSAGE', fileRow[FILE_DATA.fields.message])
+      const body = MESSAGES.rejectedBody
+        .replace('$LINK', movedFile.getUrl())
+        .replace('$MESSAGE', fileRow[FILE_DATA.fields.message])
+        .replace('$APPROVER', approver)
 
       Email.sendEmail(fileRow[FILE_DATA.fields.owner], subject, body)
     }
@@ -114,6 +120,8 @@ function installConfigs() {
       // If they not already exist
       if (!config[configs.field(key)]) {
         const folderName = `${config[configs.field('Nome')]} ${folder}`
+
+        // Create
         config[configs.field(key)] = Drive.createFolder(folderName, parentId)
         Logger.log(`Folder "${folderName}" created.`)
       }
